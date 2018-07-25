@@ -3,6 +3,7 @@ extern crate colored;
 mod ko;
 use ko::source::*;
 use ko::lexer::*;
+use ko::parser::*;
 
 fn main() {
   let file    = "foo.ko";
@@ -29,5 +30,13 @@ window:
     }
   }
 
-  println!("{:#?}", tokens)
+  let mut parser = Parser::new(tokens, &source);
+
+  match parser.parse() {
+    Ok(ref ast) => {
+      println!("{:#?}", ast)
+    },
+
+    _ => return,
+  }
 }

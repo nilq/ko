@@ -16,6 +16,15 @@ pub struct Statement {
   pub pos:  Pos,
 }
 
+impl Statement {
+  pub fn new(node: StatementNode, pos: Pos) -> Self {
+    Statement {
+      node,
+      pos,
+    }
+  }
+}
+
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -26,6 +35,7 @@ pub enum ExpressionNode {
   Bool(bool),
   Identifier(String),
   Binary(Rc<Expression>, Operator, Rc<Expression>),
+  EOF,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -33,6 +43,16 @@ pub struct Expression {
   pub node: ExpressionNode,
   pub pos:  Pos,
 }
+
+impl Expression {
+  pub fn new(node: ExpressionNode, pos: Pos) -> Self {
+    Expression {
+      node,
+      pos,
+    }
+  }
+}
+
 
 
 #[derive(Debug, Clone, PartialEq)]
@@ -78,11 +98,10 @@ impl Operator {
 impl fmt::Display for Operator {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
     use self::Operator::*;
-    
+
     let t = match *self {
       Add    => "+",
       Sub    => "-",
-      Concat => "++",
       Pow    => "^",
       Mul    => "*",
       Div    => "/",
