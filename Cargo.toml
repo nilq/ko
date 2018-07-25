@@ -1,0 +1,7 @@
+[package]
+name = "ko"
+version = "0.1.0"
+authors = ["niels <slein.nroh@gmail.com>"]
+
+[dependencies]
+colored = "*"
