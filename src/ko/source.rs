@@ -10,7 +10,7 @@ pub struct FilePath(pub String);
 
 impl fmt::Display for FilePath {
   fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "\n{:>8} {}", "-->".blue().bold(), self.0)
+    write!(f, "\n{:>8} {}", "-->".dimmed().bold(), self.0)
   }
 }
 
