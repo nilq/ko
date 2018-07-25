@@ -1,8 +1,6 @@
 use super::*;
 use super::super::error::Response::*;
 
-use super::token::Pos;
-
 macro_rules! token {
   ($tokenizer:expr, $token_type:ident, $accum:expr) => {{
     token!($tokenizer, TokenType::$token_type, $accum)

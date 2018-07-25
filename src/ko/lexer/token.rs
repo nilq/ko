@@ -48,9 +48,9 @@ impl fmt::Display for Pos {
     let mut mark = (self.0).1[(self.1).0.saturating_sub(1) .. (self.1).1].to_string();
 
     if mark.split_whitespace().count() == 0 {
-      mark = format!("{:─>count$}", ">".bold().magenta(), count=mark.len());
+      mark = format!("{:─>count$}", ">".bold().black(), count=mark.len());
     } else {
-      mark = format!("{}", mark.bold().magenta());
+      mark = format!("{}", mark.bold().black());
     }
 
     let mut arrows = format!("{: <count$}", " ", count=(self.1).0);
@@ -63,7 +63,7 @@ impl fmt::Display for Pos {
       linepad,
       lineno, &(self.0).1[..(self.1).0.saturating_sub(1)], mark, &(self.0).1[(self.1).1..],
       linepad,
-      arrows.bold().magenta()
+      arrows.bold().black()
     )
   }
 }
