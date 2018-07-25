@@ -11,19 +11,19 @@ title = "
 "
 
 window:
-    width  = 400 + 400
-    height = 600
+  width  = 400 + 400
+  height = 600
 
-    -- I really doubt your config language can do this
-    title  = "Window: " + width + "x" + height
+  -- I really doubt your config language can do this
+  title  = "Window: " + width + "x" + height
 
 server:
-    name = "bob"
-    ip   = "10.0.0.1"
+  name = "bob"
+  ip   = "10.0.0.1"
 
-    server.client:
-        name = "lisa"
-        favorite_numbers = [1, 2, 3]
+  server.client:
+    name = "lisa"
+    favorite_numbers = [1, 2, 3]
 ```
 
 ## License
