@@ -11,6 +11,7 @@ pub enum TokenType {
   Symbol,
   Keyword,
   Operator,
+  Whitespace,
   EOL,
   EOF,
 }
@@ -28,11 +29,45 @@ impl fmt::Display for TokenType {
       Symbol     => write!(f, "Symbol"),
       Keyword    => write!(f, "Keyword"),
       Operator   => write!(f, "Operator"),
+      Whitespace => write!(f, "Whitespace"),
       EOL        => write!(f, "EOL"),
       EOF        => write!(f, "EOF"),
     }
   }
 }
+
+
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Pos(pub (usize, String), pub (usize, usize));
+
+impl fmt::Display for Pos {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    let linepad = format!("{:5} │", " ").blue().bold();
+    let lineno = format!("{:5} │ ", (self.0).0).blue().bold();
+    let mut mark = (self.0).1[(self.1).0.saturating_sub(1) .. (self.1).1].to_string();
+
+    if mark.split_whitespace().count() == 0 {
+      mark = format!("{:─>count$}", ">".bold().magenta(), count=mark.len());
+    } else {
+      mark = format!("{}", mark.bold().magenta());
+    }
+
+    let mut arrows = format!("{: <count$}", " ", count=(self.1).0);
+
+    for _ in 0 .. (self.1).1 - (self.1).0 + 1 {
+      arrows.push('^')
+    }
+
+    write!(f, "\n{}\n{}{}{}{}\n{}{}",
+      linepad,
+      lineno, &(self.0).1[..(self.1).0.saturating_sub(1)], mark, &(self.0).1[(self.1).1..],
+      linepad,
+      arrows.bold().magenta()
+    )
+  }
+}
+
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Token {
@@ -56,27 +91,13 @@ impl Token {
 
 impl fmt::Display for Token {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    let linepad = format!("{:5} │", " ").blue().bold();
-    let lineno = format!("{:5} │ ", self.line.0).blue().bold();
-    let mut mark = self.line.1[self.slice.0.saturating_sub(1) .. self.slice.1].to_string();
-
-    if mark.split_whitespace().count() == 0 {
-      mark = format!("{:─>count$}", ">".bold().magenta(), count=mark.len());
-    } else {
-      mark = format!("{}", mark.bold().magenta());
-    }
-
-    let mut arrows = format!("{: <count$}", " ", count=self.slice.0);
-
-    for _ in 0 .. self.slice.1 - self.slice.0 + 1 {
-      arrows.push('^')
-    }
-
-    write!(f, "\n{}\n{}{}{}{}\n{}{}",
-      linepad,
-      lineno, &self.line.1[..self.slice.0.saturating_sub(1)], mark, &self.line.1[self.slice.1..],
-      linepad,
-      arrows.bold().magenta()
+    write!(
+      f,
+      "{}",
+      Pos(
+        (self.line.0,  self.line.1.clone()),
+        (self.slice.0, self.slice.1)
+      )
     )
   }
 }
