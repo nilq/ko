@@ -41,12 +41,6 @@ impl<'l> Lexer<'l> {
       )
     );
 
-    lexer.matchers.push(
-      Rc::new(
-        ConstantStringMatcher::new(Indent, &["  ", "\t"])
-      )
-    );
-
     lexer.matchers.push(Rc::new(IdentifierMatcher));
     lexer.matchers.push(Rc::new(NumberLiteralMatcher));
     lexer.matchers.push(Rc::new(WhitespaceMatcher));

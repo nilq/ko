@@ -2,6 +2,7 @@ use super::*;
 use super::super::error::Response::Wrong;
 
 use std::rc::Rc;
+use std::collections::HashMap;
 
 pub struct Parser<'p> {
   index:  usize,
@@ -46,10 +47,35 @@ impl<'p> Parser<'p> {
         let expression = self.parse_expression()?;
         let position   = expression.pos.clone();
 
-        Statement::new(
-          StatementNode::Expression(expression),
-          position,
-        )
+        match self.current_lexeme().as_str() {
+          "=" => {
+            self.next()?;
+
+            Statement::new(
+              StatementNode::Assignment(
+                expression,
+                self.parse_expression()?
+              ),
+              self.span_from(position)
+            )
+          },
+
+          ":" => {
+            self.next()?;
+
+            Statement::new(
+              StatementNode::Table(expression),
+              self.span_from(position)
+            )
+          },
+            
+          _ => {
+            Statement::new(
+              StatementNode::Expression(expression),
+              position,
+            )
+          },
+        }
       }
     };
 
@@ -97,7 +123,7 @@ impl<'p> Parser<'p> {
           position
         ),
 
-        Str => Expression::new(
+        Text => Expression::new(
           ExpressionNode::Text(self.eat()?),
           position
         ),
@@ -111,6 +137,14 @@ impl<'p> Parser<'p> {
           ExpressionNode::Bool(self.eat()? == "yes"),
           position
         ),
+
+        ref token_type => return Err(
+          response!(
+            Wrong(format!("unexpected token `{}`", token_type)),
+            self.source.file,
+            self.current_position()
+          )
+        )
       };
 
       Ok(expression)

@@ -7,7 +7,8 @@ use super::*;
 #[derive(Debug, Clone, PartialEq)]
 pub enum StatementNode {
   Expression(Expression),
-  Table(Expression, HashMap<String, Expression>)
+  Table(Expression),
+  Assignment(Expression, Expression),
 }
 
 #[derive(Debug, Clone, PartialEq)]
